@@ -1,33 +1,24 @@
-package my.pool.api.controller;
+package my.pool.api.service;
 
 import lombok.RequiredArgsConstructor;
 import my.pool.api.model.*;
+import my.pool.api.repository.FindPoolByIdRepository;
 import my.pool.api.repository.UserRepository;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@RestController
+@Service
 @RequiredArgsConstructor
-@RequestMapping("/user")
-public class userController {
-
+public class CardsService {
 
     private final UserRepository userRepository;
+    private final FindPoolByIdRepository findPoolByIdRepository;
     private final RestTemplate restTemplate;
 
-    @GetMapping("/{id}")
-    public UserEntity getUser(@PathVariable String id) {
-        System.out.println(id);
-        return userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-    }
-
-    @GetMapping("/cards")
-    public List<Card> getAllCards() {
-
+    public List<Card> getAll(){
         String url = "https://cards.fabtcg.com/api/search/v1/cards";
 
         List<Card> listaCompleta = new ArrayList<>();
@@ -43,9 +34,7 @@ public class userController {
         return listaCompleta;
     }
 
-    @GetMapping("/cardsfn")
-    public List<Card> getCardsByName(@RequestParam String name) {
-
+    public List<Card> findByName(String name){
         String url = "https://cards.fabtcg.com/api/search/v1/cards/?q=";
 
         List<Card> listaCompleta = new ArrayList<>();
@@ -61,32 +50,14 @@ public class userController {
         return listaCompleta;
     }
 
-    @PostMapping
-    public void postUser(@RequestBody UserDTO userDTO) {
-        userRepository.insert(new UserEntity(userDTO));
-    }
-
-    @PutMapping("/{id}")
-    public void putUser(@PathVariable String id, @RequestBody UserDTO userDTO) {
-        System.out.println(id);
-        userRepository.findById(id)
-                .map(u -> userRepository.save(userDTO.retornaUser(id)))
-                .orElseThrow(() -> new RuntimeException("User not found"));
-    }
-
-    @PutMapping("/cards/{id}")
-    public void addPool(@PathVariable String id, @RequestBody Pool pool) {
-        System.out.println(id);
+    public void addPool(String id, PoolDTO poolDTO){
         UserEntity user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
-        user.getPools().add(pool);
+        user.getPools().add(new Pool(poolDTO));
         userRepository.save(user);
     }
 
-    @DeleteMapping("/{id}")
-    public void deleteUser(@PathVariable String id) {
-        System.out.println(id);
-        userRepository.deleteById(id);
+    public Pool findPoolById(String id){
+        return findPoolByIdRepository.findPoolByPoolId(id);
     }
-
 }
