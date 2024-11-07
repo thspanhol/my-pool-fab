@@ -1,5 +1,6 @@
 package my.pool.api.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import my.pool.api.model.*;
 import my.pool.api.service.UserService;
@@ -18,12 +19,12 @@ public class UserController {
     }
 
     @PostMapping
-    public void postUser(@RequestBody UserDTO userDTO) {
+    public void postUser(@Valid @RequestBody UserDTO userDTO) {
         userService.create(userDTO);
     }
 
     @PutMapping("/{id}")
-    public void putUser(@PathVariable String id, @RequestBody UserDTO userDTO) {
+    public void putUser(@PathVariable String id, @Valid @RequestBody UserDTO userDTO) {
         userService.edit(id, userDTO);
     }
 

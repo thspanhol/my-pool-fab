@@ -24,4 +24,10 @@ public class Pool {
         this.name = poolDTO.name();
         this.poolCards = poolDTO.poolCards();
     }
+
+    public Pool(Pool pool) {
+        this.id = pool.getId();
+        this.name = pool.getName();
+        this.poolCards = pool.getPoolCards();
+    }
 }
