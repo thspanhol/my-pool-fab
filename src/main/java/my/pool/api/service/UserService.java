@@ -23,7 +23,7 @@ public class UserService {
 
     public void edit(String id, UserDTO userDTO){
         userRepository.findById(id)
-                .map(u -> userRepository.save(userDTO.retornaUser(id)))
+                .map(u -> userRepository.save(userDTO.retornaUser(u)))
                 .orElseThrow(() -> new RuntimeException("User not found"));
     }
 

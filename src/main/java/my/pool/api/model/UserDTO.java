@@ -15,12 +15,13 @@ public record UserDTO(
         @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*(),.?\":{}|<>])[A-Za-z\\d!@#$%^&*(),.?\":{}|<>]{8,}$", message = "A senha deve ter entre 8-12 dígitos, conter letra minúscula, maiúscula e pelo menos um número.")
         String password
 ) {
-    public UserEntity retornaUser(String id) {
+    public UserEntity retornaUser(UserEntity userEntity) {
         return UserEntity.builder()
-                .id(id)
+                .id(userEntity.getId())
                 .name(this.name())
                 .email(this.email())
                 .password(this.password())
+                .pools(userEntity.getPools())
                 .build();
     }
 }
