@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import my.pool.api.model.UserDTO;
 import my.pool.api.model.UserEntity;
 import my.pool.api.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service

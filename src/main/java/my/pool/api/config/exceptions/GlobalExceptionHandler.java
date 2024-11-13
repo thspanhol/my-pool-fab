@@ -8,8 +8,6 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import java.util.Objects;
-
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -29,6 +27,14 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleMethodNotAllowedException(HttpRequestMethodNotSupportedException ex) {
         String errorMessage = "Método HTTP não permitido para esta requisição.";
         return new ResponseEntity<>(errorMessage, HttpStatus.METHOD_NOT_ALLOWED);
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<String> handleRuntimeException(RuntimeException ex) {
+        if (ex.getMessage().equals("User not found")) {
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(Exception.class)
