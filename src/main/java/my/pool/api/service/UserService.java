@@ -13,8 +13,8 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    public UserEntity find(String id){
-        return userRepository.findById(id)
+    public UserEntity find(String userId){
+        return userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
     }
 
@@ -22,13 +22,13 @@ public class UserService {
         userRepository.insert(new UserEntity(userDTO));
     }
 
-    public void edit(String id, UserDTO userDTO){
-        userRepository.findById(id)
+    public void edit(String userId, UserDTO userDTO){
+        userRepository.findById(userId)
                 .map(u -> userRepository.save(userDTO.retornaUser(u)))
                 .orElseThrow(() -> new RuntimeException("User not found"));
     }
 
-    public void delete(String id){
-        userRepository.deleteById(id);
+    public void delete(String userId){
+        userRepository.deleteById(userId);
     }
 }

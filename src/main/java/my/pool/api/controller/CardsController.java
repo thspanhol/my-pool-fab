@@ -24,9 +24,9 @@ public class CardsController {
     }
 
     @Operation(description = "Acessa uma pool de cartas especifica pelo seu id.")
-    @GetMapping("/{id}")
-    public Pool getPool(@PathVariable String id) {
-        return cardsService.findPoolById(id);
+    @GetMapping("/{poolId}")
+    public Pool getPool(@PathVariable String poolId) {
+        return cardsService.findPoolById(poolId);
     }
 
     @Operation(description = "Busca cartas que contem o nome informado como parâmetro utilizando uma api terceira.")
@@ -36,10 +36,10 @@ public class CardsController {
     }
 
     @Operation(description = "Adiciona ao usuário do id informado pelo path, a pool informada no body da requisição.")
-    @PutMapping("/{id}")
+    @PutMapping("/{userId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void addPool(@PathVariable String id, @Valid @RequestBody PoolDTO poolDTO) {
-        cardsService.addPool(id, poolDTO);
+    public void addPool(@PathVariable String userId, @Valid @RequestBody PoolDTO poolDTO) {
+        cardsService.addPool(userId, poolDTO);
     }
 
     @Operation(description = "Adiciona as cartas informadas no body a pool com id informado do usuário com o id informado.")

@@ -16,9 +16,9 @@ public class UserController {
     private final UserService userService;
 
     @Operation(description = "Busca o usuário pelo id.")
-    @GetMapping("/{id}")
-    public UserEntity getUser(@PathVariable String id) {
-        return userService.find(id);
+    @GetMapping("/{userId}")
+    public UserEntity getUser(@PathVariable String userId) {
+        return userService.find(userId);
     }
 
     @Operation(description = "Cria um novo usuário.")
@@ -29,17 +29,17 @@ public class UserController {
     }
 
     @Operation(description = "Altera email, nome ou senha do usuário existente.")
-    @PutMapping("/{id}")
+    @PutMapping("/{userId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void putUser(@PathVariable String id, @Valid @RequestBody UserDTO userDTO) {
-        userService.edit(id, userDTO);
+    public void putUser(@PathVariable String userId, @Valid @RequestBody UserDTO userDTO) {
+        userService.edit(userId, userDTO);
     }
 
     @Operation(description = "Deleta um usuário pelo id.")
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{userId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteUser(@PathVariable String id) {
-        userService.delete(id);
+    public void deleteUser(@PathVariable String userId) {
+        userService.delete(userId);
     }
 
 }

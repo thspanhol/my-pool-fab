@@ -50,15 +50,15 @@ public class CardsService {
         return listaCompleta;
     }
 
-    public void addPool(String id, PoolDTO poolDTO){
-        UserEntity user = userRepository.findById(id)
+    public void addPool(String userId, PoolDTO poolDTO){
+        UserEntity user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         user.getPools().add(new Pool(poolDTO));
         userRepository.save(user);
     }
 
-    public Pool findPoolById(String id){
-        return findPoolByIdRepository.findPoolByPoolId(id);
+    public Pool findPoolById(String poolId){
+        return findPoolByIdRepository.findPoolByPoolId(poolId);
     }
 
     public void deletePool(String userId, String poolId){
