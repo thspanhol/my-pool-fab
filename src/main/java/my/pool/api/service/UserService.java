@@ -15,7 +15,7 @@ public class UserService {
 
     public UserEntity find(String userId){
         return userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new RuntimeException("User not found."));
     }
 
     public void create(UserDTO userDTO){
@@ -25,7 +25,7 @@ public class UserService {
     public void edit(String userId, UserDTO userDTO){
         userRepository.findById(userId)
                 .map(u -> userRepository.save(userDTO.retornaUser(u)))
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new RuntimeException("User not found."));
     }
 
     public void delete(String userId){

@@ -21,7 +21,10 @@ public class FindPoolByIdRepository implements CustomUserRepository {
         query.fields().include("pools.$");
 
         UserEntity user = mongoTemplate.findOne(query, UserEntity.class);
-        return (user != null && user.getPools() != null && !user.getPools().isEmpty()) ? user.getPools().get(0) : null;
+
+        if (user != null && user.getPools() != null && !user.getPools().isEmpty()) return user.getPools().get(0);
+
+        throw new RuntimeException("Pool not found.");
     }
 }
 

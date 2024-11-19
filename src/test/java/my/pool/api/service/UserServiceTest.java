@@ -64,7 +64,7 @@ class UserServiceTest {
         when(userRepository.findById("111")).thenReturn(Optional.empty());
 
         Exception exception = assertThrows(RuntimeException.class, () -> userService.find("111"));
-        assertEquals("User not found", exception.getMessage());
+        assertEquals("User not found.", exception.getMessage());
         verify(userRepository, times(1)).findById("111");
     }
 
@@ -96,7 +96,7 @@ class UserServiceTest {
         when(userRepository.findById("111")).thenReturn(Optional.empty());
 
         Exception exception = assertThrows(RuntimeException.class, () -> userService.edit("111", userDTO));
-        assertEquals("User not found", exception.getMessage());
+        assertEquals("User not found.", exception.getMessage());
         verify(userRepository, times(1)).findById("111");
         verify(userRepository, times(0)).save(any(UserEntity.class));
     }

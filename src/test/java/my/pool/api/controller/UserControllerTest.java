@@ -62,7 +62,7 @@ class UserControllerTest {
 
     @Test
     void testGetUserNotFound() throws Exception {
-        when(userService.find("123")).thenThrow(new RuntimeException("User not found"));
+        when(userService.find("123")).thenThrow(new RuntimeException("User not found."));
 
         mockMvc.perform(get("/my-pool/user/123")
                         .contentType(MediaType.APPLICATION_JSON))
@@ -93,7 +93,7 @@ class UserControllerTest {
 
     @Test
     void testPutUserNotFound() throws Exception {
-        doThrow(new RuntimeException("User not found")).when(userService).edit(eq("123"), any(UserDTO.class));
+        doThrow(new RuntimeException("User not found.")).when(userService).edit(eq("123"), any(UserDTO.class));
 
         mockMvc.perform(put("/my-pool/user/123")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -114,7 +114,7 @@ class UserControllerTest {
 
     @Test
     void testDeleteUserNotFound() throws Exception {
-        doThrow(new RuntimeException("User not found")).when(userService).delete("123");
+        doThrow(new RuntimeException("User not found.")).when(userService).delete("123");
 
         mockMvc.perform(delete("/my-pool/user/123")
                         .contentType(MediaType.APPLICATION_JSON))
