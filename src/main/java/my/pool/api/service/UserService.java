@@ -29,6 +29,10 @@ public class UserService {
     }
 
     public void delete(String userId){
-        userRepository.deleteById(userId);
+        userRepository.findById(userId)
+                .ifPresentOrElse(
+                        u -> userRepository.deleteById(u.getId()),
+                        () -> { throw new RuntimeException("User not found."); }
+                );
     }
 }

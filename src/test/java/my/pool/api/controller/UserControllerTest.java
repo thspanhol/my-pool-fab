@@ -2,73 +2,76 @@ package my.pool.api.controller;
 
 import my.pool.api.model.UserDTO;
 import my.pool.api.model.UserEntity;
+import my.pool.api.repository.UserRepository;
 import my.pool.api.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.mockito.Mockito.*;
 import static org.hamcrest.Matchers.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-@WebMvcTest(UserController.class)
+
+@SpringBootTest // Inicializa todo o contexto do Spring
+@AutoConfigureMockMvc // Configura o MockMvc automaticamente
+@ActiveProfiles("test") // Usa o perfil de teste configurado para o MongoDB Embedded
 class UserControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
-    @MockBean
-    private UserService userService;
+    @Autowired
+    private UserRepository userRepository; // Repositório conectado ao MongoDB Embedded
 
-    private UserEntity userEntity;
-    private UserDTO userDTO;
+    @Autowired
+    private UserService userService; // Serviço real conectado ao repositório
 
     @Autowired
     private ObjectMapper objectMapper;
 
+    private UserEntity userEntity;
+    private UserDTO userDTO;
+
     @BeforeEach
     void setUp() {
+        userRepository.deleteAll(); // Limpa os dados antes de cada teste
+
         userEntity = UserEntity.builder()
-                .id("123")
-                .name("John Doe")
-                .email("john.doe@example.com")
+                .id("111")
+                .name("Thales Spanhol")
+                .email("thales@example.com")
                 .password("Senh@123")
                 .build();
 
-        userDTO = new UserDTO("John Doe", "john.doe@example.com", "Senh@123");
+        userDTO = new UserDTO("Novo Nome", "novonome@example.com", "Senh@456");
     }
 
     @Test
     void testGetUserSuccess() throws Exception {
-        when(userService.find("123")).thenReturn(userEntity);
+        userRepository.save(userEntity); // Insere o usuário no banco
 
-        mockMvc.perform(get("/my-pool/user/123")
+        mockMvc.perform(get("/my-pool/user/111")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id", is("123")))
-                .andExpect(jsonPath("$.name", is("John Doe")))
-                .andExpect(jsonPath("$.email", is("john.doe@example.com")));
-
-        verify(userService, times(1)).find("123");
+                .andExpect(jsonPath("$.id", is("111")))
+                .andExpect(jsonPath("$.name", is("Thales Spanhol")))
+                .andExpect(jsonPath("$.email", is("thales@example.com")));
     }
 
     @Test
     void testGetUserNotFound() throws Exception {
-        when(userService.find("123")).thenThrow(new RuntimeException("User not found."));
-
-        mockMvc.perform(get("/my-pool/user/123")
+        mockMvc.perform(get("/my-pool/user/222")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
-
-        verify(userService, times(1)).find("123");
     }
 
     @Test
@@ -78,48 +81,55 @@ class UserControllerTest {
                         .content(objectMapper.writeValueAsString(userDTO)))
                 .andExpect(status().isCreated());
 
-        verify(userService, times(1)).create(any(UserDTO.class));
+        // Verifica se o usuário foi salvo no banco
+        UserEntity savedUser = userRepository.findByEmail("novonome@example.com").orElseThrow();
+        assertEquals("Novo Nome", savedUser.getName());
     }
 
     @Test
     void testPutUserSuccess() throws Exception {
-        mockMvc.perform(put("/my-pool/user/123")
+        userRepository.save(userEntity);
+
+        UserEntity savedUser = userRepository.findById("111").orElseThrow();
+        assertEquals("Thales Spanhol", savedUser.getName());
+
+        mockMvc.perform(put("/my-pool/user/111")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(userDTO)))
                 .andExpect(status().isNoContent());
 
-        verify(userService, times(1)).edit(eq("123"), any(UserDTO.class));
+        // Verifica se o nome foi atualizado no banco
+        UserEntity updatedUser = userRepository.findById("111").orElseThrow();
+        assertEquals("Novo Nome", updatedUser.getName());
     }
 
     @Test
     void testPutUserNotFound() throws Exception {
-        doThrow(new RuntimeException("User not found.")).when(userService).edit(eq("123"), any(UserDTO.class));
-
-        mockMvc.perform(put("/my-pool/user/123")
+        mockMvc.perform(put("/my-pool/user/222")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(userDTO)))
                 .andExpect(status().isNotFound());
-
-        verify(userService, times(1)).edit(eq("123"), any(UserDTO.class));
     }
 
     @Test
     void testDeleteUserSuccess() throws Exception {
-        mockMvc.perform(delete("/my-pool/user/123")
+        userRepository.save(userEntity);
+
+        UserEntity savedUser = userRepository.findByEmail("thales@example.com").orElseThrow();
+        assertEquals("Thales Spanhol", savedUser.getName());
+
+        mockMvc.perform(delete("/my-pool/user/111")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
 
-        verify(userService, times(1)).delete("123");
+        // Verifica se o usuário foi removido do banco
+        assertFalse(userRepository.findById("111").isPresent());
     }
 
     @Test
     void testDeleteUserNotFound() throws Exception {
-        doThrow(new RuntimeException("User not found.")).when(userService).delete("123");
-
-        mockMvc.perform(delete("/my-pool/user/123")
+        mockMvc.perform(delete("/my-pool/user/222")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
-
-        verify(userService, times(1)).delete("123");
     }
 }
