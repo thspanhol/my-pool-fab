@@ -33,9 +33,6 @@ class UserControllerTest {
     private UserRepository userRepository; // Repositório conectado ao MongoDB Embedded
 
     @Autowired
-    private UserService userService; // Serviço real conectado ao repositório
-
-    @Autowired
     private ObjectMapper objectMapper;
 
     private UserEntity userEntity;
@@ -79,6 +76,7 @@ class UserControllerTest {
         mockMvc.perform(post("/my-pool/user")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(userDTO)))
+                        //.content(userDTO.toString()))
                 .andExpect(status().isCreated());
 
         // Verifica se o usuário foi salvo no banco

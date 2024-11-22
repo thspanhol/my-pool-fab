@@ -1,10 +1,12 @@
 package my.pool.api.service;
 
 import lombok.RequiredArgsConstructor;
+import my.pool.api.integration.Integration;
 import my.pool.api.model.*;
 import my.pool.api.repository.FindPoolByIdRepository;
 import my.pool.api.repository.UserRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
@@ -17,37 +19,14 @@ public class CardsService {
     private final UserRepository userRepository;
     private final FindPoolByIdRepository findPoolByIdRepository;
     private final RestTemplate restTemplate;
+    private final Integration integration;
 
     public List<Card> getAll(){
-        String url = "https://cards.fabtcg.com/api/search/v1/cards";
-
-        List<Card> listaCompleta = new ArrayList<>();
-
-        while (url != null) {
-            CardsResponse response = restTemplate.getForObject(url, CardsResponse.class);
-
-            if (response == null) break;
-
-            listaCompleta.addAll(response.getResults());
-            url = response.getNext();
-        }
-        return listaCompleta;
+        return integration.api("");
     }
 
     public List<Card> findByName(String name){
-        String url = "https://cards.fabtcg.com/api/search/v1/cards/?q=";
-
-        List<Card> listaCompleta = new ArrayList<>();
-
-        while (url != null) {
-            CardsResponse response = restTemplate.getForObject(url + name, CardsResponse.class);
-
-            if (response == null) break;
-
-            listaCompleta.addAll(response.getResults());
-            url = response.getNext();
-        }
-        return listaCompleta;
+        return integration.api(name);
     }
 
     public void addPool(String userId, PoolDTO poolDTO){
