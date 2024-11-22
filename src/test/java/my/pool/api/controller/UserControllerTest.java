@@ -32,9 +32,6 @@ class UserControllerTest {
     @Autowired
     private UserRepository userRepository; // Repositório conectado ao MongoDB Embedded
 
-    @Autowired
-    private ObjectMapper objectMapper;
-
     private UserEntity userEntity;
     private UserDTO userDTO;
 
@@ -75,8 +72,7 @@ class UserControllerTest {
     void testPostUserSuccess() throws Exception {
         mockMvc.perform(post("/my-pool/user")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(userDTO)))
-                        //.content(userDTO.toString()))
+                        .content(userDTO.toString()))
                 .andExpect(status().isCreated());
 
         // Verifica se o usuário foi salvo no banco
@@ -93,7 +89,7 @@ class UserControllerTest {
 
         mockMvc.perform(put("/my-pool/user/111")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(userDTO)))
+                        .content(userDTO.toString()))
                 .andExpect(status().isNoContent());
 
         // Verifica se o nome foi atualizado no banco
@@ -105,7 +101,7 @@ class UserControllerTest {
     void testPutUserNotFound() throws Exception {
         mockMvc.perform(put("/my-pool/user/222")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(userDTO)))
+                        .content(userDTO.toString()))
                 .andExpect(status().isNotFound());
     }
 

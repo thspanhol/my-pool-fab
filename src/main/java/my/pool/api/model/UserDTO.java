@@ -24,4 +24,16 @@ public record UserDTO(
                 .pools(userEntity.getPools())
                 .build();
     }
+
+    @Override
+    public String toString() {
+
+        return String.format("""
+        {
+            "name": "%s",
+            "email": "%s",
+            "password": "%s"
+        }
+        """, name, email, password);
+    }
 }
