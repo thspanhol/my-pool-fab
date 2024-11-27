@@ -18,7 +18,6 @@ public class CardsService {
 
     private final UserRepository userRepository;
     private final FindPoolByIdRepository findPoolByIdRepository;
-    private final RestTemplate restTemplate;
     private final Integration integration;
 
     public List<Card> getAll(){
@@ -47,20 +46,6 @@ public class CardsService {
         user.getPools().remove(removed);
         userRepository.save(user);
     }
-
-//    public void addCardToPool(String userId, String poolId, List<Card> list) {
-//        UserEntity user = userRepository.findById(userId)
-//                .orElseThrow(() -> new RuntimeException("User not found."));
-//
-//        Pool poolToAdd = user.getPools().stream()
-//                .filter(pool -> pool.getId().equals(poolId))
-//                .findFirst()
-//                .orElseThrow(() -> new RuntimeException("Pool not found."));
-//
-//        list.forEach(card -> poolToAdd.getPoolCards().add(card));
-//
-//        userRepository.save(user);
-//    }
 
     public void addCardToPool(String userId, String poolId, List<Card> list) {
         UserEntity user = userRepository.findById(userId)
@@ -92,8 +77,6 @@ public class CardsService {
         newPoolCards.removeAll(list);
 
         poolToRemoveCards.setPoolCards(newPoolCards);
-
-        //list.forEach(card -> poolToRemoveCards.getPoolCards().remove((card)));
 
         userRepository.save(user);
     }

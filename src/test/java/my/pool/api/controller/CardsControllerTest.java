@@ -39,11 +39,9 @@ class CardsControllerTest {
 
     private Card card1;
     private Card card2;
-    private Pool pool;
     private PoolDTO poolDTO;
     private List<Card> cardList;
     private UserEntity userEntity;
-    private UserDTO userDTO;
 
     @BeforeEach
     void setUp() {

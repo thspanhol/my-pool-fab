@@ -3,7 +3,6 @@ package my.pool.api.controller;
 import my.pool.api.model.UserDTO;
 import my.pool.api.model.UserEntity;
 import my.pool.api.repository.UserRepository;
-import my.pool.api.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +17,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.hamcrest.Matchers.*;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 @SpringBootTest // Inicializa todo o contexto do Spring

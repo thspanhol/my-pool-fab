@@ -6,11 +6,11 @@ import my.pool.api.repository.FindPoolByIdRepository;
 import my.pool.api.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 
-import org.springframework.web.client.RestTemplate;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +19,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 class CardsServiceTest {
 
     @Mock
@@ -26,9 +27,6 @@ class CardsServiceTest {
 
     @Mock
     private FindPoolByIdRepository findPoolByIdRepository;
-
-    @Mock
-    private RestTemplate restTemplate;
 
     @Mock
     private Integration integration;
@@ -62,8 +60,6 @@ class CardsServiceTest {
         poolDTO = new PoolDTO("My Test Pool", cardList);
 
         pool = new Pool("444", "My Test Pool", cardList);
-
-        MockitoAnnotations.openMocks(this);
     }
 
     @Test

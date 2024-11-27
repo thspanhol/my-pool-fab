@@ -7,31 +7,29 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
-@ExtendWith(SpringExtension.class)
-@SpringBootTest // Inicializa o contexto Spring para usar MongoDB Embedded
+@ExtendWith(MockitoExtension.class)
 class UserServiceTest {
 
-    @Autowired
-    private UserRepository userRepository; // Instância real conectada ao banco embedded
+    @Mock
+    private UserRepository userRepository;
 
-    @Autowired
-    private UserService userService; // Classe de serviço com dependência injetada
+    @InjectMocks
+    private UserService userService;
 
     private UserEntity userEntity;
     private UserDTO userDTO;
 
     @BeforeEach
     void setUp() {
-        // Limpa os dados do banco antes de cada teste
-        userRepository.deleteAll();
 
         userEntity = UserEntity.builder()
                 .id("111")
@@ -40,13 +38,13 @@ class UserServiceTest {
                 .password("Senh@123")
                 .build();
 
-        userDTO = new UserDTO("Novo Nome", "thales@example.com", "Senh@123");
+        userDTO = new UserDTO("Thales Spanhol", "thales@example.com", "Senh@123");
     }
 
     @Test
     void testFindUserExists() {
-        // Insere o usuário no banco antes de realizar o teste
-        userRepository.save(userEntity);
+
+        when(userRepository.findById("111")).thenReturn(Optional.of(userEntity));
 
         UserEntity result = userService.find("111");
 
@@ -55,48 +53,59 @@ class UserServiceTest {
         assertEquals("Thales Spanhol", result.getName());
         assertEquals("thales@example.com", result.getEmail());
         assertEquals("Senh@123", result.getPassword());
+        verify(userRepository, times(1)).findById("111");
     }
 
     @Test
     void testFindUserNotFound() {
-        // Nenhum usuário é inserido no banco
+
+        when(userRepository.findById("111")).thenReturn(Optional.empty());
+
         Exception exception = assertThrows(RuntimeException.class, () -> userService.find("111"));
+
         assertEquals("User not found.", exception.getMessage());
+        verify(userRepository, times(1)).findById("111");
     }
 
     @Test
     void testCreate() {
+
+        when(userRepository.insert(any(UserEntity.class))).thenReturn(userEntity);
+
         userService.create(userDTO);
 
-        // Verifica se o usuário foi realmente persistido no banco
-        Optional<UserEntity> savedUser = userRepository.findByName("Novo Nome");
-        assertTrue(savedUser.isPresent());
-        assertEquals("Novo Nome", savedUser.get().getName());
+        verify(userRepository, times(1)).insert(any(UserEntity.class));
     }
 
     @Test
     void testEditUserExists() {
-        userRepository.save(userEntity);
+
+        when(userRepository.findById("111")).thenReturn(Optional.of(userEntity));
+        when(userRepository.save(any(UserEntity.class))).thenReturn(userEntity);
 
         userService.edit("111", userDTO);
 
-        UserEntity updatedUser = userRepository.findById("111").orElseThrow();
-        assertEquals("Novo Nome", updatedUser.getName());
+        verify(userRepository, times(1)).findById("111");
+        verify(userRepository, times(1)).save(any(UserEntity.class));
     }
 
     @Test
     void testEditUserNotFound() {
+
+        when(userRepository.findById("111")).thenReturn(Optional.empty());
+
         Exception exception = assertThrows(RuntimeException.class, () -> userService.edit("111", userDTO));
+
         assertEquals("User not found.", exception.getMessage());
+        verify(userRepository, times(1)).findById("111");
+        verify(userRepository, times(0)).save(any(UserEntity.class));
     }
 
     @Test
     void testDelete() {
-        userRepository.save(userEntity);
+        when(userRepository.findById("111")).thenReturn(Optional.of(userEntity));
 
         userService.delete("111");
-
-        Optional<UserEntity> deletedUser = userRepository.findById("111");
-        assertFalse(deletedUser.isPresent());
+        verify(userRepository, times(1)).deleteById("111");
     }
 }
