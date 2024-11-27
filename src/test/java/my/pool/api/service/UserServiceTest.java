@@ -15,7 +15,6 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-
 @ExtendWith(SpringExtension.class)
 @SpringBootTest // Inicializa o contexto Spring para usar MongoDB Embedded
 class UserServiceTest {

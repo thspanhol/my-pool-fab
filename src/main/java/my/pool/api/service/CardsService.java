@@ -48,6 +48,20 @@ public class CardsService {
         userRepository.save(user);
     }
 
+//    public void addCardToPool(String userId, String poolId, List<Card> list) {
+//        UserEntity user = userRepository.findById(userId)
+//                .orElseThrow(() -> new RuntimeException("User not found."));
+//
+//        Pool poolToAdd = user.getPools().stream()
+//                .filter(pool -> pool.getId().equals(poolId))
+//                .findFirst()
+//                .orElseThrow(() -> new RuntimeException("Pool not found."));
+//
+//        list.forEach(card -> poolToAdd.getPoolCards().add(card));
+//
+//        userRepository.save(user);
+//    }
+
     public void addCardToPool(String userId, String poolId, List<Card> list) {
         UserEntity user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found."));
@@ -57,7 +71,10 @@ public class CardsService {
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("Pool not found."));
 
-        list.forEach(card -> poolToAdd.getPoolCards().add(card));
+        List<Card> newPoolCards = new ArrayList<>(list);
+        newPoolCards.addAll(poolToAdd.getPoolCards());
+
+        poolToAdd.setPoolCards(newPoolCards);
 
         userRepository.save(user);
     }
@@ -71,7 +88,12 @@ public class CardsService {
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("Pool not found."));
 
-        list.forEach(card -> poolToRemoveCards.getPoolCards().remove((card)));
+        List<Card> newPoolCards = new ArrayList<>(poolToRemoveCards.getPoolCards());
+        newPoolCards.removeAll(list);
+
+        poolToRemoveCards.setPoolCards(newPoolCards);
+
+        //list.forEach(card -> poolToRemoveCards.getPoolCards().remove((card)));
 
         userRepository.save(user);
     }
