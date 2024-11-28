@@ -74,7 +74,8 @@ public class CardsService {
                 .orElseThrow(() -> new RuntimeException("Pool not found."));
 
         List<Card> newPoolCards = new ArrayList<>(poolToRemoveCards.getPoolCards());
-        newPoolCards.removeAll(list);
+
+        list.forEach(newPoolCards::remove);
 
         poolToRemoveCards.setPoolCards(newPoolCards);
 
