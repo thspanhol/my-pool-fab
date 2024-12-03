@@ -1,10 +1,8 @@
 package my.pool.api.integration;
 
 import lombok.RequiredArgsConstructor;
-import my.pool.api.model.Card;
-import my.pool.api.model.CardsResponse;
-import my.pool.api.model.PoolEntity;
-import my.pool.api.repository.PoolRepository;
+import my.pool.api.integration.models.Card;
+import my.pool.api.integration.models.CardsResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 

@@ -1,4 +1,4 @@
-package my.pool.api.model;
+package my.pool.api.integration.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;

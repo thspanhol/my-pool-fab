@@ -3,8 +3,9 @@ package my.pool.api.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import my.pool.api.model.*;
-import my.pool.api.service.UserService;
+import my.pool.api.service.users.UserService;
+import my.pool.api.service.users.models.UserDTO;
+import my.pool.api.service.users.models.UserEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 

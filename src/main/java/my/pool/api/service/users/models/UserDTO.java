@@ -1,8 +1,7 @@
-package my.pool.api.model;
+package my.pool.api.service.users.models;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Email;
 
 public record UserDTO(
         @NotBlank(message = "Necessário informar o nome.")

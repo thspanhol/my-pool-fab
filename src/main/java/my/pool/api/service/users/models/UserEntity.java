@@ -1,4 +1,4 @@
-package my.pool.api.model;
+package my.pool.api.service.users.models;
 
 import lombok.*;
 import org.springframework.data.annotation.Id;

@@ -1,4 +1,4 @@
-package my.pool.api.model;
+package my.pool.api.service.cards.models;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

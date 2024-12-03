@@ -3,8 +3,10 @@ package my.pool.api.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import my.pool.api.model.*;
-import my.pool.api.service.CardsService;
+import my.pool.api.integration.models.Card;
+import my.pool.api.service.cards.CardsService;
+import my.pool.api.service.cards.models.PoolEntityDTO;
+import my.pool.api.service.cards.models.PoolEntityResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 

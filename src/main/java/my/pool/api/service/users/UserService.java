@@ -1,10 +1,9 @@
-package my.pool.api.service;
+package my.pool.api.service.users;
 
 import lombok.RequiredArgsConstructor;
-import my.pool.api.model.UserDTO;
-import my.pool.api.model.UserEntity;
+import my.pool.api.service.users.models.UserDTO;
+import my.pool.api.service.users.models.UserEntity;
 import my.pool.api.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service

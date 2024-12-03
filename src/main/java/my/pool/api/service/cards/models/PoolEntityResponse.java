@@ -1,9 +1,8 @@
-package my.pool.api.model;
+package my.pool.api.service.cards.models;
 
 import lombok.*;
+import my.pool.api.integration.models.Card;
 import my.pool.api.integration.Integration;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
 

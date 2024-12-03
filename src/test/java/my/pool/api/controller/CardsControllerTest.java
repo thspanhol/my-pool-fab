@@ -3,7 +3,7 @@
 //import com.fasterxml.jackson.databind.ObjectMapper;
 //import my.pool.api.model.*;
 //import my.pool.api.repository.UserRepository;
-//import my.pool.api.service.CardsService;
+//import my.pool.api.service.cards.CardsService;
 //import org.hamcrest.Matchers;
 //import org.junit.jupiter.api.*;
 //import org.springframework.beans.factory.annotation.Autowired;

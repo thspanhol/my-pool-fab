@@ -1,16 +1,16 @@
-package my.pool.api.service;
+package my.pool.api.service.cards;
 
 import lombok.RequiredArgsConstructor;
+import my.pool.api.integration.models.Card;
 import my.pool.api.integration.Integration;
-import my.pool.api.model.*;
-//import my.pool.api.repository.FindPoolByIdRepository;
 import my.pool.api.repository.PoolRepository;
 import my.pool.api.repository.UserRepository;
+import my.pool.api.service.cards.models.PoolEntity;
+import my.pool.api.service.cards.models.PoolEntityDTO;
+import my.pool.api.service.cards.models.PoolEntityResponse;
+import my.pool.api.service.users.models.UserEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -19,7 +19,6 @@ public class CardsService {
 
     private final UserRepository userRepository;
     private final PoolRepository poolRepository;
-    //private final FindPoolByIdRepository findPoolByIdRepository;
     private final Integration integration;
 
     public List<Card> getAll(){

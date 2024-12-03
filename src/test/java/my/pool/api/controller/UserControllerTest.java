@@ -1,7 +1,7 @@
 //package my.pool.api.controller;
 //
-//import my.pool.api.model.UserDTO;
-//import my.pool.api.model.UserEntity;
+//import my.pool.api.service.users.models.UserDTO;
+//import my.pool.api.service.users.models.UserEntity;
 //import my.pool.api.repository.UserRepository;
 //import org.junit.jupiter.api.BeforeEach;
 //import org.junit.jupiter.api.Test;
