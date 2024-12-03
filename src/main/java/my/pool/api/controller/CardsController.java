@@ -25,7 +25,7 @@ public class CardsController {
 
     @Operation(description = "Acessa uma pool de cartas especifica pelo seu id.")
     @GetMapping("/{poolId}")
-    public Pool getPool(@PathVariable String poolId) {
+    public PoolEntity getPool(@PathVariable String poolId) {
         return cardsService.findPoolById(poolId);
     }
 
@@ -35,39 +35,45 @@ public class CardsController {
         return cardsService.findByName(name);
     }
 
-    @Operation(description = "Adiciona ao usuário do id informado pelo path, a pool informada no body da requisição.")
-    @PutMapping("/{userId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void addPool(@PathVariable String userId, @Valid @RequestBody PoolDTO poolDTO) {
-        cardsService.addPool(userId, poolDTO);
+    @Operation(description = "Busca todos os dados das cartas contidas na pool.")
+    @GetMapping("/pool")
+    public List<Card> getCardsToPool(@RequestParam String poolId) {
+        return cardsService.getCardsToPool(poolId);
     }
 
-    @Operation(description = "Adiciona as cartas informadas no body a pool com id informado do usuário com o id informado.")
+    @Operation(description = "Cria uma nova pool.")
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public void addPool(@Valid @RequestBody PoolEntityDTO poolEntityDTO) {
+        cardsService.addPool(poolEntityDTO);
+    }
+
+    @Operation(description = "Adiciona as cartas informadas no body a pool com id informado.")
     @PutMapping("/addCardsToPool")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void addCardsToPool(@RequestParam String userId, @RequestParam String poolId, @RequestBody List<Card> list) {
-        cardsService.addCardToPool(userId, poolId, list);
+    public void addCardsToPool(@RequestParam String poolId, @RequestBody List<String> list) {
+        cardsService.addCardToPool(poolId, list);
     }
 
     @Operation(description = "Remove as cartas informadas no body da pool com id informado do usuário com o id informado.")
     @PutMapping("/deleteCardsToPool")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteCardsToPool(@RequestParam String userId, @RequestParam String poolId, @RequestBody List<Card> list) {
-        cardsService.deleteCardToPool(userId, poolId, list);
+    public void deleteCardsToPool(@RequestParam String poolId, @RequestBody List<String> list) {
+        cardsService.deleteCardToPool(poolId, list);
     }
 
-    @Operation(description = "Renomeia a pool com id informado, do usuário com id informado.")
+    @Operation(description = "Renomeia a pool com id informado.")
     @PutMapping("/renamePool")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void renamePool(@RequestParam String userId, @RequestParam String poolId, @RequestParam String rename) {
-        cardsService.renamePool(userId, poolId, rename);
+    public void renamePool(@RequestParam String poolId, @RequestParam String rename) {
+        cardsService.renamePool(poolId, rename);
     }
 
-    @Operation(description = "Remove a pool com id informado da lista do usuário com id informado.")
+    @Operation(description = "Remove a pool com id informado.")
     @DeleteMapping("/deletePool")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deletePool(@RequestParam String userId, @RequestParam String poolId) {
-        cardsService.deletePool(userId, poolId);
+    public void deletePool(@RequestParam String poolId) {
+        cardsService.deletePool(poolId);
     }
 
 }

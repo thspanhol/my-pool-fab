@@ -19,7 +19,7 @@ public class UserEntity {
     private String name;
     private String email;
     private String password;
-    private List<Pool> pools;
+    private List<String> pools;
 
     public UserEntity(UserDTO userDTO) {
         this.password = userDTO.password();

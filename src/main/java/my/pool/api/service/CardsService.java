@@ -3,7 +3,8 @@ package my.pool.api.service;
 import lombok.RequiredArgsConstructor;
 import my.pool.api.integration.Integration;
 import my.pool.api.model.*;
-import my.pool.api.repository.FindPoolByIdRepository;
+//import my.pool.api.repository.FindPoolByIdRepository;
+import my.pool.api.repository.PoolRepository;
 import my.pool.api.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,7 +18,8 @@ import java.util.List;
 public class CardsService {
 
     private final UserRepository userRepository;
-    private final FindPoolByIdRepository findPoolByIdRepository;
+    private final PoolRepository poolRepository;
+    //private final FindPoolByIdRepository findPoolByIdRepository;
     private final Integration integration;
 
     public List<Card> getAll(){
@@ -28,72 +30,73 @@ public class CardsService {
         return integration.api(name);
     }
 
-    public void addPool(String userId, PoolDTO poolDTO){
-        UserEntity user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found."));
-        user.getPools().add(new Pool(poolDTO));
-        userRepository.save(user);
+    public List<Card> getCardsToPool(String poolId){
+        return integration.getDataPool(poolId);
     }
 
-    public Pool findPoolById(String poolId){
-        return findPoolByIdRepository.findPoolByPoolId(poolId);
-    }
+    public void addPool(PoolEntityDTO poolEntityDTO){
 
-    public void deletePool(String userId, String poolId){
-        UserEntity user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found."));
-        Pool removed = findPoolByIdRepository.findPoolByPoolId(poolId);
-        user.getPools().remove(removed);
-        userRepository.save(user);
-    }
-
-    public void addCardToPool(String userId, String poolId, List<Card> list) {
-        UserEntity user = userRepository.findById(userId)
+        UserEntity creator = userRepository.findById(poolEntityDTO.creatorId())
                 .orElseThrow(() -> new RuntimeException("User not found."));
 
-        Pool poolToAdd = user.getPools().stream()
-                .filter(pool -> pool.getId().equals(poolId))
-                .findFirst()
+        PoolEntity newPool = new PoolEntity(poolEntityDTO);
+
+        poolRepository.insert(newPool);
+
+        creator.getPools().add(newPool.getId());
+
+        userRepository.save(creator);
+    }
+
+    public PoolEntity findPoolById(String poolId){
+        return poolRepository.findById(poolId)
+                .orElseThrow(() -> new RuntimeException("Pool not found."));
+    }
+
+    public void deletePool(String poolId){
+
+        PoolEntity result = poolRepository.findById(poolId)
                 .orElseThrow(() -> new RuntimeException("Pool not found."));
 
-        List<Card> newPoolCards = new ArrayList<>(list);
-        newPoolCards.addAll(poolToAdd.getPoolCards());
-
-        poolToAdd.setPoolCards(newPoolCards);
-
-        userRepository.save(user);
-    }
-
-    public void deleteCardToPool(String userId, String poolId, List<Card> list) {
-        UserEntity user = userRepository.findById(userId)
+        UserEntity creator = userRepository.findById(result.getCreatorId())
                 .orElseThrow(() -> new RuntimeException("User not found."));
 
-        Pool poolToRemoveCards = user.getPools().stream()
-                .filter(pool -> pool.getId().equals(poolId))
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("Pool not found."));
+        creator.getPools().remove(poolId);
 
-        List<Card> newPoolCards = new ArrayList<>(poolToRemoveCards.getPoolCards());
-
-        list.forEach(newPoolCards::remove);
-
-        poolToRemoveCards.setPoolCards(newPoolCards);
-
-        userRepository.save(user);
+        userRepository.save(creator);
+        poolRepository.delete(result);
     }
 
-    public void renamePool(String userId, String poolId, String  rename) {
-        UserEntity user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found."));
+    public void addCardToPool(String poolId, List<String> list) {
 
-        Pool poolToRename = user.getPools().stream()
-                .filter(pool -> pool.getId().equals(poolId))
-                .findFirst()
+        PoolEntity result = poolRepository.findById(poolId)
                 .orElseThrow(() -> new RuntimeException("Pool not found."));
 
-        poolToRename.setName(rename);
+//        List<String> newPoolCards = new ArrayList<>(list);
+//        newPoolCards.addAll(poolToAdd.getPoolCards());
+//        poolToAdd.setPoolCards(newPoolCards);
 
-        userRepository.save(user);
+        result.getPoolCards().addAll(list);
+        poolRepository.save(result);
+    }
+
+    public void deleteCardToPool(String poolId, List<String> list) {
+
+        PoolEntity result = poolRepository.findById(poolId)
+                .orElseThrow(() -> new RuntimeException("Pool not found."));
+
+        list.forEach(card -> result.getPoolCards().remove(card));
+        poolRepository.save(result);
+    }
+
+    public void renamePool(String poolId, String  rename) {
+
+        PoolEntity result = poolRepository.findById(poolId)
+                .orElseThrow(() -> new RuntimeException("Pool not found."));
+
+        result.setName(rename);
+
+        poolRepository.save(result);
     }
 
 }
