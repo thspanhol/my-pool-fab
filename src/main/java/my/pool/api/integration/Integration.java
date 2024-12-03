@@ -16,7 +16,6 @@ import java.util.List;
 public class Integration {
 
     private final RestTemplate restTemplate;
-    private final PoolRepository poolRepository;
     private String url = "https://cards.fabtcg.com/api/search/v1/cards/?q=";
 
     public List<Card> api(String name){
@@ -34,14 +33,11 @@ public class Integration {
         return completeList;
     }
 
-    public List<Card> getDataPool(String poolId){
-
-        PoolEntity pool = poolRepository.findById(poolId)
-                .orElseThrow(() -> new RuntimeException("Pool not found."));
+    public List<Card> getDataPool(List<String> poolCards){
 
         List<Card> completeList = new ArrayList<>();
 
-        pool.getPoolCards().forEach(card -> {
+        poolCards.forEach(card -> {
             CardsResponse response = restTemplate.getForObject(url + card, CardsResponse.class);
             assert response != null;
             completeList.add(response.getResults().getFirst());

@@ -30,10 +30,6 @@ public class CardsService {
         return integration.api(name);
     }
 
-    public List<Card> getCardsToPool(String poolId){
-        return integration.getDataPool(poolId);
-    }
-
     public void addPool(PoolEntityDTO poolEntityDTO){
 
         UserEntity creator = userRepository.findById(poolEntityDTO.creatorId())
@@ -48,9 +44,11 @@ public class CardsService {
         userRepository.save(creator);
     }
 
-    public PoolEntity findPoolById(String poolId){
-        return poolRepository.findById(poolId)
+    public PoolEntityResponse findPoolById(String poolId){
+        PoolEntity result = poolRepository.findById(poolId)
                 .orElseThrow(() -> new RuntimeException("Pool not found."));
+
+        return new PoolEntityResponse(result, integration);
     }
 
     public void deletePool(String poolId){

@@ -10,7 +10,9 @@ public record PoolEntityDTO(
         @NotBlank(message = "Necessário informar o nome.")
         @Pattern(regexp = "^[A-Z][a-z]*(?: [A-Z][a-z]*){0,14}$", message = "Os nomes devem começar com letras maiusculas e conter entre 4-30 caracteres.")
         String name,
+        @NotBlank(message = "Necessário informar se a pool é pública ou privada.")
         Boolean isPublic,
+        @NotBlank(message = "Necessário informar o id do criador.")
         String creatorId,
         @NotEmpty(message = "Necessário informar as cartas da pool.")
         List<String> poolCards

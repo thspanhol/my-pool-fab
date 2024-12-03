@@ -25,7 +25,7 @@ public class CardsController {
 
     @Operation(description = "Acessa uma pool de cartas especifica pelo seu id.")
     @GetMapping("/{poolId}")
-    public PoolEntity getPool(@PathVariable String poolId) {
+    public PoolEntityResponse getPool(@PathVariable String poolId) {
         return cardsService.findPoolById(poolId);
     }
 
@@ -33,12 +33,6 @@ public class CardsController {
     @GetMapping("/search")
     public List<Card> getCardsByName(@RequestParam String name) {
         return cardsService.findByName(name);
-    }
-
-    @Operation(description = "Busca todos os dados das cartas contidas na pool.")
-    @GetMapping("/pool")
-    public List<Card> getCardsToPool(@RequestParam String poolId) {
-        return cardsService.getCardsToPool(poolId);
     }
 
     @Operation(description = "Cria uma nova pool.")
