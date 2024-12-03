@@ -11,6 +11,7 @@ import my.pool.api.service.cards.models.PoolEntityResponse;
 import my.pool.api.service.users.models.UserEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -69,10 +70,6 @@ public class CardsService {
         PoolEntity result = poolRepository.findById(poolId)
                 .orElseThrow(() -> new RuntimeException("Pool not found."));
 
-//        List<String> newPoolCards = new ArrayList<>(list);
-//        newPoolCards.addAll(poolToAdd.getPoolCards());
-//        poolToAdd.setPoolCards(newPoolCards);
-
         result.getPoolCards().addAll(list);
         poolRepository.save(result);
     }
@@ -82,7 +79,12 @@ public class CardsService {
         PoolEntity result = poolRepository.findById(poolId)
                 .orElseThrow(() -> new RuntimeException("Pool not found."));
 
-        list.forEach(card -> result.getPoolCards().remove(card));
+        List<String> newPoolCards = new ArrayList<>(result.getPoolCards());
+        list.forEach(newPoolCards::remove);
+        result.setPoolCards(newPoolCards);
+
+        //list.forEach(card -> result.getPoolCards().remove(card));
+
         poolRepository.save(result);
     }
 
