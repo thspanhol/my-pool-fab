@@ -45,6 +45,7 @@ public class CardsService {
     }
 
     public PoolEntityResponse findPoolById(String poolId){
+
         PoolEntity result = poolRepository.findById(poolId)
                 .orElseThrow(() -> new RuntimeException("Pool not found."));
 
@@ -97,5 +98,4 @@ public class CardsService {
 
         poolRepository.save(result);
     }
-
 }

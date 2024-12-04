@@ -40,7 +40,6 @@ dependencies {
 
 	testImplementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo:4.9.2'
 
-
 }
 
 tasks.named('test') {
