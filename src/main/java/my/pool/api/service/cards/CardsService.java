@@ -23,7 +23,7 @@ public class CardsService {
     private final Integration integration;
 
     public List<Card> getAll(){
-        return integration.api("");
+        return integration.fullApi();
     }
 
     public List<Card> findByName(String name){
