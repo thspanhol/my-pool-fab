@@ -1,6 +1,7 @@
 package my.pool.api.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import my.pool.api.config.AppConfig;
 import my.pool.api.integration.models.Card;
 import my.pool.api.repository.PoolRepository;
 import my.pool.api.repository.UserRepository;
