@@ -49,7 +49,7 @@ public class CardsService {
         PoolEntity result = poolRepository.findById(poolId)
                 .orElseThrow(() -> new RuntimeException("Pool not found."));
 
-        return new PoolEntityResponse(result, integration);
+        return PoolEntityResponse.toResponse(result, integration.getDataPool(result.getPoolCards()));
     }
 
     public void deletePool(String poolId){

@@ -2,7 +2,6 @@ package my.pool.api.service.cards.models;
 
 import lombok.*;
 import my.pool.api.integration.models.Card;
-import my.pool.api.integration.Integration;
 
 import java.util.List;
 
@@ -18,11 +17,13 @@ public class PoolEntityResponse {
     private String creatorId;
     private List<Card> poolCards;
 
-    public PoolEntityResponse(PoolEntity poolEntity, Integration integration) {
-        id = poolEntity.getId();
-        name = poolEntity.getName();
-        isPublic = poolEntity.getIsPublic();
-        creatorId = poolEntity.getCreatorId();
-        poolCards = integration.getDataPool(poolEntity.getPoolCards());
+    public static PoolEntityResponse toResponse(PoolEntity poolEntity, List<Card> poolList) {
+        return PoolEntityResponse.builder()
+                .id(poolEntity.getId())
+                .name(poolEntity.getName())
+                .isPublic(poolEntity.getIsPublic())
+                .creatorId(poolEntity.getCreatorId())
+                .poolCards(poolList)
+                .build();
     }
 }
