@@ -17,9 +17,12 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.testcontainers.containers.MongoDBContainer;
 
 
 import java.util.ArrayList;
@@ -30,9 +33,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@SpringBootTest // Inicializa todo o contexto do Spring
-@AutoConfigureMockMvc // Configura o MockMvc automaticamente
-//@ActiveProfiles("test") // Usa o perfil de teste configurado para o MongoDB Embedded
+@SpringBootTest
+@AutoConfigureMockMvc
 class CardsControllerTest {
 
     @Autowired
@@ -46,6 +48,18 @@ class CardsControllerTest {
 
     @Autowired
     private PoolRepository poolRepository;
+
+    private static final MongoDBContainer mongoDBContainer;
+
+    static {
+        mongoDBContainer = new MongoDBContainer("mongo:6.0");
+        mongoDBContainer.start();
+    }
+
+    @DynamicPropertySource
+    static void mongoProperties(DynamicPropertyRegistry registry) {
+        registry.add("spring.data.mongodb.uri", mongoDBContainer::getReplicaSetUrl);
+    }
 
     private Card card1;
     private Card card2;

@@ -10,7 +10,10 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
+import org.testcontainers.containers.MongoDBContainer;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -19,23 +22,34 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.hamcrest.Matchers.*;
 
 
-@SpringBootTest // Inicializa todo o contexto do Spring
-@AutoConfigureMockMvc // Configura o MockMvc automaticamente
-//@ActiveProfiles("test") // Usa o perfil de teste configurado para o MongoDB Embedded
+@SpringBootTest
+@AutoConfigureMockMvc
 class UserControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
     @Autowired
-    private UserRepository userRepository; // Repositório conectado ao MongoDB Embedded
+    private UserRepository userRepository;
+
+    private static final MongoDBContainer mongoDBContainer;
+
+    static {
+        mongoDBContainer = new MongoDBContainer("mongo:6.0");
+        mongoDBContainer.start();
+    }
+
+    @DynamicPropertySource
+    static void mongoProperties(DynamicPropertyRegistry registry) {
+        registry.add("spring.data.mongodb.uri", mongoDBContainer::getReplicaSetUrl);
+    }
 
     private UserEntity userEntity;
     private UserDTO userDTO;
 
     @BeforeEach
     void setUp() {
-        userRepository.deleteAll(); // Limpa os dados antes de cada teste
+        userRepository.deleteAll();
 
         userEntity = UserEntity.builder()
                 .id("111")
