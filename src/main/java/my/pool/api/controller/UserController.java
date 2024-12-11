@@ -8,6 +8,7 @@ import my.pool.api.service.users.models.UserDTO;
 import my.pool.api.service.users.models.UserEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Mono;
 
 @RestController
 @RequiredArgsConstructor
@@ -18,29 +19,28 @@ public class UserController {
 
     @Operation(description = "Busca o usuário pelo id.")
     @GetMapping("/{userId}")
-    public UserEntity getUser(@PathVariable String userId) {
+    public Mono<UserEntity> getUser(@PathVariable String userId) {
         return userService.find(userId);
     }
 
     @Operation(description = "Cria um novo usuário.")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void postUser(@Valid @RequestBody UserDTO userDTO) {
-        userService.create(userDTO);
+    public Mono<Void> postUser(@Valid @RequestBody UserDTO userDTO) {
+        return userService.create(userDTO);
     }
 
     @Operation(description = "Altera email, nome ou senha do usuário existente.")
     @PutMapping("/{userId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void putUser(@PathVariable String userId, @Valid @RequestBody UserDTO userDTO) {
-        userService.edit(userId, userDTO);
+    public Mono<Void> putUser(@PathVariable String userId, @Valid @RequestBody UserDTO userDTO) {
+        return userService.edit(userId, userDTO);
     }
 
     @Operation(description = "Deleta um usuário pelo id.")
     @DeleteMapping("/{userId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteUser(@PathVariable String userId) {
-        userService.delete(userId);
+    public Mono<Void> deleteUser(@PathVariable String userId) {
+        return userService.delete(userId);
     }
-
 }
