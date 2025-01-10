@@ -10,7 +10,6 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -25,7 +24,12 @@ public class UserService {
     }
 
     public Mono<Void> create(UserDTO userDTO) {
-        return userRepository.insert(new UserEntity(userDTO))
+        return userRepository.insert(UserEntity.builder()
+                        .name(userDTO.name())
+                        .email(userDTO.email())
+                        .password(userDTO.password())
+                        .pools(new ArrayList<>())
+                        .build())
                 .then();
     }
 

@@ -23,10 +23,4 @@ public class PoolEntity {
     private String creatorId;
     private List<String> poolCards;
 
-    public PoolEntity(PoolEntityDTO poolEntityDTO) {
-        name = poolEntityDTO.name();
-        isPublic = poolEntityDTO.isPublic();
-        creatorId = poolEntityDTO.creatorId();
-        poolCards = poolEntityDTO.poolCards();
-    }
 }

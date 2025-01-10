@@ -48,7 +48,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb-reactive'
 
 	//Spring Cloud Config
-	implementation 'org.springframework.cloud:spring-cloud-starter-config'
+	//implementation 'org.springframework.cloud:spring-cloud-starter-config'
 
 }
 

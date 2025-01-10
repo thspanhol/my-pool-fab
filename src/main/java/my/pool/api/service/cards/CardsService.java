@@ -8,7 +8,6 @@ import my.pool.api.repository.UserRepository;
 import my.pool.api.service.cards.models.PoolEntity;
 import my.pool.api.service.cards.models.PoolEntityDTO;
 import my.pool.api.service.cards.models.PoolEntityResponse;
-import my.pool.api.service.users.models.UserEntity;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -36,7 +35,14 @@ public class CardsService {
         return userRepository.findById(poolEntityDTO.creatorId())
                 .switchIfEmpty(Mono.error(new RuntimeException("User not found.")))
                 .flatMap(creator -> {
-                    PoolEntity newPool = new PoolEntity(poolEntityDTO);
+
+                    PoolEntity newPool = PoolEntity.builder()
+                            .name(poolEntityDTO.name())
+                            .isPublic(poolEntityDTO.isPublic())
+                            .creatorId(poolEntityDTO.creatorId())
+                            .poolCards(poolEntityDTO.poolCards())
+                            .build();
+
                     return poolRepository.insert(newPool)
                             .then(Mono.just(creator))
                             .flatMap(updatedCreator -> {

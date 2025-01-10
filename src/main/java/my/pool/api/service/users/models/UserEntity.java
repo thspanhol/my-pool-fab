@@ -4,7 +4,6 @@ import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -21,10 +20,4 @@ public class UserEntity {
     private String password;
     private List<String> pools;
 
-    public UserEntity(UserDTO userDTO) {
-        this.password = userDTO.password();
-        this.email = userDTO.email();
-        this.name = userDTO.name();
-        this.pools = new ArrayList<>();
-    }
 }
