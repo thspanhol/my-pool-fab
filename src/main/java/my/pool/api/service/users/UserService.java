@@ -23,12 +23,23 @@ public class UserService {
                 .switchIfEmpty(Mono.error(new RuntimeException("User not found.")));
     }
 
+//    public Mono<Void> create(UserDTO userDTO) {
+//        return userRepository.insert(UserEntity.builder()
+//                        .name(userDTO.name())
+//                        .email(userDTO.email())
+//                        .password(userDTO.password())
+//                        .pools(new ArrayList<>())
+//                        .build())
+//                .then();
+//    }
+
     public Mono<Void> create(UserDTO userDTO) {
-        return userRepository.insert(UserEntity.builder()
+        return userRepository.insert(new UserEntity.Builder()
+                        .id(null)
                         .name(userDTO.name())
                         .email(userDTO.email())
                         .password(userDTO.password())
-                        .pools(new ArrayList<>())
+                        .pools(null)
                         .build())
                 .then();
     }

@@ -6,6 +6,7 @@ import my.pool.api.integration.models.CardsResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 
@@ -58,4 +59,5 @@ public class Integration {
                                 .concatWith(fetchAllPages(response.getNext()))
                 );
     }
+
 }
