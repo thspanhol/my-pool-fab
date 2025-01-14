@@ -16,7 +16,7 @@ public class Integration {
 
     private final WebClient webClient;
 
-    public Flux<Card> fullApi() {
+    public Mono<List<Card>> fullApi() {
         return webClient.get()
                 .uri("/")
                 .retrieve()
@@ -24,7 +24,8 @@ public class Integration {
                 .flatMapMany(response ->
                         Flux.fromIterable(response.getResults())
                                 .concatWith(fetchAllPages(response.getNext()))
-                );
+                )
+                .collectList();
     }
 
     public Flux<Card> api(String name) {

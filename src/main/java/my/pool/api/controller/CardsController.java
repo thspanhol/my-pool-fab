@@ -23,7 +23,7 @@ public class CardsController {
 
     @Operation(description = "Busca todas as cartas existentes utilizando uma api terceira.")
     @GetMapping
-    public Flux<Card> getAllCards() {
+    public Mono<List<Card>> getAllCards() {
         return cardsService.getAll();
     }
 

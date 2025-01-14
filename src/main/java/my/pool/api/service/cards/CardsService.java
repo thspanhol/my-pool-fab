@@ -23,7 +23,7 @@ public class CardsService {
     private final PoolRepository poolRepository;
     private final Integration integration;
 
-    public Flux<Card> getAll() {
+    public Mono<List<Card>> getAll() {
         return integration.fullApi();
     }
 
