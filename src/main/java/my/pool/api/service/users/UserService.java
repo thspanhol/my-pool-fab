@@ -9,8 +9,6 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.ArrayList;
-
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -35,11 +33,9 @@ public class UserService {
 
     public Mono<Void> create(UserDTO userDTO) {
         return userRepository.insert(new UserEntity.Builder()
-                        .id(null)
                         .name(userDTO.name())
                         .email(userDTO.email())
                         .password(userDTO.password())
-                        .pools(null)
                         .build())
                 .then();
     }

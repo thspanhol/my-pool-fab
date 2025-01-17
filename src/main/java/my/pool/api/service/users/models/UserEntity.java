@@ -31,17 +31,14 @@ public class UserEntity {
     }
 
     public static class Builder {
-        private String id;
+        private String id = null;
         private String name;
         private String email;
         private String password;
-        private List<String> pools;
+        private List<String> pools = new ArrayList<>();
 
         public Builder id(String id) {
-            if (id != null) {
-                this.id = id;
-                return this;
-            }
+            this.id = id;
             return this;
         }
 
@@ -58,11 +55,7 @@ public class UserEntity {
             return this;
         }
         public Builder pools(List<String> pools) {
-            if (pools != null) {
-                this.pools = pools;
-                return this;
-            }
-            this.pools = new ArrayList<>();
+            this.pools = pools != null ? pools :  new ArrayList<>();
             return this;
         }
         public UserEntity build() {
