@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import my.pool.api.integration.models.Card;
+import my.pool.api.integration.models.CardsResponse;
 import my.pool.api.service.cards.CardsService;
 import my.pool.api.service.cards.models.PoolEntityDTO;
 import my.pool.api.service.cards.models.PoolEntityResponse;
@@ -23,7 +24,7 @@ public class CardsController {
 
     @Operation(description = "Busca todas as cartas existentes utilizando uma api terceira.")
     @GetMapping
-    public Mono<List<Card>> getAllCards() {
+    public Flux<Card> getAllCards() {
         return cardsService.getAll();
     }
 

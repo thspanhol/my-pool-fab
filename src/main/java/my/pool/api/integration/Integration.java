@@ -16,16 +16,23 @@ public class Integration {
 
     private final WebClient webClient;
 
-    public Mono<List<Card>> fullApi() {
+    public Flux<Card> fetchCards() {
         return webClient.get()
                 .uri("/")
                 .retrieve()
                 .bodyToMono(CardsResponse.class)
-                .flatMapMany(response ->
-                        Flux.fromIterable(response.getResults())
-                                .concatWith(fetchAllPages(response.getNext()))
-                )
-                .collectList();
+                .expand(cardsResponse -> {
+                    String nextUrl = cardsResponse.getNext();
+                    if (nextUrl != null) {
+                        return webClient.get()
+                                .uri(nextUrl)
+                                .retrieve()
+                                .bodyToMono(CardsResponse.class);
+                    } else {
+                        return Mono.empty();
+                    }
+                })
+                .flatMapIterable(CardsResponse::getResults);
     }
 
     public Flux<Card> api(String name) {
@@ -43,21 +50,6 @@ public class Integration {
                         .retrieve()
                         .bodyToMono(CardsResponse.class)
                         .map(response -> response.getResults().getFirst())
-                );
-    }
-
-    private Flux<Card> fetchAllPages(String nextUrl) {
-        if (nextUrl == null) {
-            return Flux.empty();
-        }
-
-        return webClient.get()
-                .uri(nextUrl)
-                .retrieve()
-                .bodyToMono(CardsResponse.class)
-                .flatMapMany(response ->
-                        Flux.fromIterable(response.getResults())
-                                .concatWith(fetchAllPages(response.getNext()))
                 );
     }
 

@@ -3,6 +3,7 @@ package my.pool.api.service.cards;
 import lombok.RequiredArgsConstructor;
 import my.pool.api.integration.models.Card;
 import my.pool.api.integration.Integration;
+import my.pool.api.integration.models.CardsResponse;
 import my.pool.api.repository.PoolRepository;
 import my.pool.api.repository.UserRepository;
 import my.pool.api.service.cards.models.PoolEntity;
@@ -23,8 +24,8 @@ public class CardsService {
     private final PoolRepository poolRepository;
     private final Integration integration;
 
-    public Mono<List<Card>> getAll() {
-        return integration.fullApi();
+    public Flux<Card> getAll() {
+        return integration.fetchCards();
     }
 
     public Flux<Card> findByName(String name) {
