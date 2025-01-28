@@ -3,6 +3,7 @@ package my.pool.api.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import my.pool.api.service.users.DeleteDecorator;
 import my.pool.api.service.users.UserFacade;
 import my.pool.api.service.users.UserService;
 import my.pool.api.service.users.models.UserDTO;
@@ -18,6 +19,7 @@ public class UserController {
 
     //private final UserService userService;
     private final UserFacade userFacade;
+    private final DeleteDecorator deleteDecorator;
 
 
     @Operation(description = "Busca o usuário pelo id.")
@@ -44,6 +46,6 @@ public class UserController {
     @DeleteMapping("/{userId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public Mono<Void> deleteUser(@PathVariable String userId) {
-        return userFacade.delete(userId);
+        return deleteDecorator.delete(userId);
     }
 }

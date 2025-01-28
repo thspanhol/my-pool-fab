@@ -9,7 +9,7 @@ import reactor.core.publisher.Mono;
 
 @Service
 @RequiredArgsConstructor
-public class UserFacade {
+public class UserFacade implements DeleteInterface{
 
     private final UserService userService;
     private final UserRepository userRepository;
@@ -35,9 +35,11 @@ public class UserFacade {
                 .then();
     }
 
+    @Override
     public Mono<Void> delete(String userId) {
         return userService.findUserById(userId)
                 .flatMap(user -> userService.deleteAssociatedPools(user)
                         .then(userService.deleteUserById(user.getId())));
     }
+
 }
