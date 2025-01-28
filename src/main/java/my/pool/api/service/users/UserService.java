@@ -16,43 +16,49 @@ public class UserService {
     private final UserRepository userRepository;
     private final PoolRepository poolRepository;
 
-    public Mono<UserEntity> find(String userId) {
+//    public Mono<UserEntity> find(String userId) {
+//        return userRepository.findById(userId)
+//                .switchIfEmpty(Mono.error(new RuntimeException("User not found.")));
+//    }
+//
+//
+//    public Mono<Void> create(UserDTO userDTO) {
+//        return userRepository.insert(new UserEntity.Builder()
+//                        .name(userDTO.name())
+//                        .email(userDTO.email())
+//                        .password(userDTO.password())
+//                        .build())
+//                .then();
+//    }
+//
+//    public Mono<Void> edit(String userId, UserDTO userDTO) {
+//        return userRepository.findById(userId)
+//                .switchIfEmpty(Mono.error(new RuntimeException("User not found.")))
+//                .flatMap(user -> userRepository.save(userDTO.retornaUser(user)))
+//                .then();
+//    }
+
+//    public Mono<Void> delete(String userId) {
+//        return userRepository.findById(userId)
+//                .switchIfEmpty(Mono.error(new RuntimeException("User not found.")))
+//                .flatMap(user -> Flux.fromIterable(user.getPools())
+//                        .flatMap(poolRepository::deleteById)
+//                        .then(userRepository.deleteById(user.getId())));
+//    }
+
+    public Mono<UserEntity> findUserById(String userId) {
         return userRepository.findById(userId)
                 .switchIfEmpty(Mono.error(new RuntimeException("User not found.")));
     }
 
-//    public Mono<Void> create(UserDTO userDTO) {
-//        return userRepository.insert(UserEntity.builder()
-//                        .name(userDTO.name())
-//                        .email(userDTO.email())
-//                        .password(userDTO.password())
-//                        .pools(new ArrayList<>())
-//                        .build())
-//                .then();
-//    }
-
-    public Mono<Void> create(UserDTO userDTO) {
-        return userRepository.insert(new UserEntity.Builder()
-                        .name(userDTO.name())
-                        .email(userDTO.email())
-                        .password(userDTO.password())
-                        .build())
+    public Mono<Void> deleteAssociatedPools(UserEntity user) {
+        return Flux.fromIterable(user.getPools())
+                .flatMap(poolRepository::deleteById)
                 .then();
     }
 
-    public Mono<Void> edit(String userId, UserDTO userDTO) {
-        return userRepository.findById(userId)
-                .switchIfEmpty(Mono.error(new RuntimeException("User not found.")))
-                .flatMap(user -> userRepository.save(userDTO.retornaUser(user)))
-                .then();
-    }
-
-    public Mono<Void> delete(String userId) {
-        return userRepository.findById(userId)
-                .switchIfEmpty(Mono.error(new RuntimeException("User not found.")))
-                .flatMap(user -> Flux.fromIterable(user.getPools())
-                        .flatMap(poolRepository::deleteById)
-                        .then(userRepository.deleteById(user.getId())));
+    public Mono<Void> deleteUserById(String userId) {
+        return userRepository.deleteById(userId);
     }
 
 }
