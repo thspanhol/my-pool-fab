@@ -9,6 +9,7 @@ import my.pool.api.repository.UserRepository;
 import my.pool.api.service.cards.models.PoolEntity;
 import my.pool.api.service.cards.models.PoolEntityDTO;
 import my.pool.api.service.cards.models.PoolEntityResponse;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -23,6 +24,7 @@ public class CardsService {
     private final UserRepository userRepository;
     private final PoolRepository poolRepository;
     private final Integration integration;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     public Flux<Card> getAll() {
         return integration.fetchCards();
@@ -33,22 +35,34 @@ public class CardsService {
     }
 
     public Mono<Void> addPool(PoolEntityDTO poolEntityDTO) {
+//        return userRepository.findById(poolEntityDTO.creatorId())
+//                .switchIfEmpty(Mono.error(new RuntimeException("User not found.")))
+//                .flatMap(creator -> {
+//
+//                    PoolEntity newPool = PoolEntity.builder()
+//                            .name(poolEntityDTO.name())
+//                            .isPublic(poolEntityDTO.isPublic())
+//                            .creatorId(poolEntityDTO.creatorId())
+//                            .poolCards(poolEntityDTO.poolCards())
+//                            .build();
+//
+//                    return poolRepository.insert(newPool)
+//                            .then(Mono.just(creator))
+//                            .flatMap(updatedCreator -> {
+//                                updatedCreator.getPools().add(newPool.getId());
+//                                return userRepository.save(updatedCreator);
+//                            });
+//                })
+//                .then();
         return userRepository.findById(poolEntityDTO.creatorId())
                 .switchIfEmpty(Mono.error(new RuntimeException("User not found.")))
                 .flatMap(creator -> {
-
-                    PoolEntity newPool = PoolEntity.builder()
-                            .name(poolEntityDTO.name())
-                            .isPublic(poolEntityDTO.isPublic())
-                            .creatorId(poolEntityDTO.creatorId())
-                            .poolCards(poolEntityDTO.poolCards())
-                            .build();
-
+                    PoolEntity newPool = new PoolEntity(poolEntityDTO.name(), poolEntityDTO.isPublic(), poolEntityDTO.creatorId(), poolEntityDTO.poolCards());
                     return poolRepository.insert(newPool)
-                            .then(Mono.just(creator))
-                            .flatMap(updatedCreator -> {
-                                updatedCreator.getPools().add(newPool.getId());
-                                return userRepository.save(updatedCreator);
+                            .doOnSuccess(pool -> applicationEventPublisher.publishEvent(new PoolCreatedEvent(this, pool)))
+                            .flatMap(pool -> {
+                                creator.getPools().add(pool.getId());
+                                return userRepository.save(creator);
                             });
                 })
                 .then();

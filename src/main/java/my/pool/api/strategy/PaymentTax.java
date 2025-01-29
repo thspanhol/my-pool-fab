@@ -4,4 +4,5 @@ public interface PaymentTax {
 
     String getType();
     double getTax(double amount);
+
 }
