@@ -1,9 +1,7 @@
 package my.pool.api.strategy;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -12,16 +10,9 @@ public class PaymentController {
 
     private final PaymantService paymantService;
 
-    @GetMapping("/credit")
-    public String getPaymentCredit() {
-        PaymentTax credit = new CreditCard();
-        return paymantService.processPayment(credit, 100);
-    }
-
-    @GetMapping("/debit")
-    public String getPaymentDebit() {
-        PaymentTax debit = new DebitCard();
-        return paymantService.processPayment(debit, 100);
+    @PostMapping("/all")
+    public Double getPayment(@RequestBody ObjectTax objectTax) {
+        return paymantService.calculateTax(objectTax);
     }
 
 }

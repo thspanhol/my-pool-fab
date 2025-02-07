@@ -3,7 +3,7 @@ package my.pool.api.strategy;
 import org.springframework.stereotype.Service;
 
 @Service
-public class CreditCard implements PaymentTax{
+public class CreditCard implements PaymentTaxStrategy {
 
     @Override
     public String getType() {

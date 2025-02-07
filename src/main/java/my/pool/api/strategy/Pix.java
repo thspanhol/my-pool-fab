@@ -3,16 +3,16 @@ package my.pool.api.strategy;
 import org.springframework.stereotype.Service;
 
 @Service
-public class DebitCard implements PaymentTaxStrategy {
+public class Pix implements PaymentTaxStrategy {
 
     @Override
     public String getType() {
-        return "Debit";
+        return "Pix";
     }
 
     @Override
     public double getTax(double amount) {
-        return amount * 0.05;
+        return amount * 1 ;
     }
 
 }
